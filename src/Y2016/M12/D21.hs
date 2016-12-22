@@ -59,6 +59,8 @@ the result of scrambling abcdefgh?
 
 -}
 
+import Data.Vector
+
 type Position = Int
 type Steps = Int
 
@@ -70,3 +72,14 @@ data Op = SwapPositions Position Position
         | RotateByCharIndex Char
         | RotateAbsolute Direction Steps
         | Reverse Position Position
+
+eval :: Vector Char -> Op -> Maybe (Vector Char)
+eval v (SwapPositions p1 p2) = do
+  c1 <- v !? p1
+  c2 <- v !? p2
+  return (v // [(p1, c2), (p2, c1)])
+eval v (SwapChars c1 c2) = undefined
+eval v (Move p1 p2) = undefined
+eval v (RotateByCharIndex c) = undefined
+eval v (RotateAbsolute dir steps) = undefined
+eval v (Reverse p1 p2) = undefined

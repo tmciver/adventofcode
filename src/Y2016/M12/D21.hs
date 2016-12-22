@@ -78,7 +78,11 @@ eval v (SwapPositions p1 p2) = do
   c1 <- v !? p1
   c2 <- v !? p2
   return (v // [(p1, c2), (p2, c1)])
-eval v (SwapChars c1 c2) = undefined
+eval v (SwapChars c1 c2) = Just $ fmap f v
+  where f c
+          | c == c1 = c2
+          | c == c2 = c1
+          | otherwise = c
 eval v (Move p1 p2) = undefined
 eval v (RotateByCharIndex c) = undefined
 eval v (RotateAbsolute dir steps) = undefined

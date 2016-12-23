@@ -68,10 +68,10 @@ data Direction = Left | Right
 
 data Op = SwapPositions Position Position
         | SwapChars Char Char
-        | Move Position Position
-        | RotateByCharIndex Char
         | RotateAbsolute Direction Steps
+        | RotateByCharIndex Char
         | Reverse Position Position
+        | Move Position Position
 
 eval :: Vector Char -> Op -> Maybe (Vector Char)
 eval v (SwapPositions p1 p2) = do
@@ -83,7 +83,7 @@ eval v (SwapChars c1 c2) = Just $ fmap f v
           | c == c1 = c2
           | c == c2 = c1
           | otherwise = c
-eval v (Move p1 p2) = undefined
-eval v (RotateByCharIndex c) = undefined
 eval v (RotateAbsolute dir steps) = undefined
+eval v (RotateByCharIndex c) = undefined
 eval v (Reverse p1 p2) = undefined
+eval v (Move p1 p2) = undefined

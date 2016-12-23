@@ -59,6 +59,7 @@ the result of scrambling abcdefgh?
 
 -}
 
+import Prelude hiding (Either(..))
 import Data.Vector
 
 type Position = Int
@@ -83,7 +84,8 @@ eval v (SwapChars c1 c2) = Just $ fmap f v
           | c == c1 = c2
           | c == c2 = c1
           | otherwise = c
-eval v (RotateAbsolute dir steps) = undefined
+eval v (RotateAbsolute Left steps) = Just $ (Data.Vector.drop steps v) Data.Vector.++ (Data.Vector.take steps v)
+eval v (RotateAbsolute Right steps) = eval v (RotateAbsolute Left ((Data.Vector.length v) - steps))
 eval v (RotateByCharIndex c) = undefined
 eval v (Reverse p1 p2) = undefined
 eval v (Move p1 p2) = undefined

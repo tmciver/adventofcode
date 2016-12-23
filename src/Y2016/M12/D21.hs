@@ -84,8 +84,10 @@ eval v (SwapChars c1 c2) = Just $ fmap f v
           | c == c1 = c2
           | c == c2 = c1
           | otherwise = c
-eval v (RotateAbsolute Left steps) = Just $ (Data.Vector.drop steps v) Data.Vector.++ (Data.Vector.take steps v)
-eval v (RotateAbsolute Right steps) = eval v (RotateAbsolute Left ((Data.Vector.length v) - steps))
+eval v (RotateAbsolute dir steps) = case dir of
+  Left -> Just $ (Data.Vector.drop normSteps v) Data.Vector.++ (Data.Vector.take normSteps v)
+  Right -> eval v (RotateAbsolute Left ((Data.Vector.length v) - normSteps))
+  where normSteps = mod steps (Data.Vector.length v)
 eval v (RotateByCharIndex c) = maybeSteps >>= (\steps -> eval v (RotateAbsolute Right steps))
   where maybeSteps = fmap adjustSteps (elemIndex c v)
         adjustSteps i = 1 + i + if i >= 4 then 1 else 0

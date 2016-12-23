@@ -60,6 +60,7 @@ the result of scrambling abcdefgh?
 -}
 
 import Prelude hiding (Either(..))
+import Data.List
 import Data.Vector as V
 
 type Position = Int
@@ -89,7 +90,10 @@ eval v (RotateAbsolute dir steps) = case dir of
   Right -> eval v (RotateAbsolute Left ((V.length v) - normSteps))
   where normSteps = mod steps (V.length v)
 eval v (RotateByCharIndex c) = maybeSteps >>= (\steps -> eval v (RotateAbsolute Right steps))
-  where maybeSteps = fmap adjustSteps (elemIndex c v)
+  where maybeSteps = fmap adjustSteps (V.elemIndex c v)
         adjustSteps i = 1 + i + if i >= 4 then 1 else 0
-eval v (Reverse p1 p2) = undefined
+eval v (Reverse p1 p2) = Just $ front V.++ (V.reverse middle) V.++ rear
+  where (front, rest) = V.splitAt p1' v
+        (middle, rear) = V.splitAt (p2' - p1' + 1) rest
+        [p1',p2'] = sort [p1,p2]
 eval v (Move p1 p2) = undefined

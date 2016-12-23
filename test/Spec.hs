@@ -28,4 +28,7 @@ evalUnitTests = testGroup "Tests for `eval` function."
                   (eval (V.fromList "abcdefghijk") (RotateByCharIndex 'e')) `compare` (Just $ V.fromList "fghijkabcde") @?= EQ
                 , testCase "Test `eval` for `RotateByCharIndex` operator (3)." $
                   (eval (V.fromList "abcde") (RotateByCharIndex 'e')) `compare` (Just $ V.fromList "eabcd") @?= EQ
+
+                , testCase "Test `eval` for `Reverse` operator." $
+                  (eval (V.fromList "abcde") (Reverse 1 3)) `compare` (Just $ V.fromList "adcbe") @?= EQ
                 ]

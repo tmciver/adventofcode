@@ -29,8 +29,8 @@ follows:
   through Y (including the letters at X and Y) should be reversed in order.
 * move position X to position Y means that the letter which is at index X should
   be removed from the string, then inserted such that it ends up at index Y.
-* For example, suppose you start with abcde and perform the following
-  operations:
+
+For example, suppose you start with abcde and perform the following operations:
 
 * swap position 4 with position 0 swaps the first and last letters, producing
   the input for the next step, ebcda.

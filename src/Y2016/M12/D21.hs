@@ -86,6 +86,8 @@ eval v (SwapChars c1 c2) = Just $ fmap f v
           | otherwise = c
 eval v (RotateAbsolute Left steps) = Just $ (Data.Vector.drop steps v) Data.Vector.++ (Data.Vector.take steps v)
 eval v (RotateAbsolute Right steps) = eval v (RotateAbsolute Left ((Data.Vector.length v) - steps))
-eval v (RotateByCharIndex c) = undefined
+eval v (RotateByCharIndex c) = maybeSteps >>= (\steps -> eval v (RotateAbsolute Right steps))
+  where maybeSteps = fmap adjustSteps (elemIndex c v)
+        adjustSteps i = 1 + i + if i >= 4 then 1 else 0
 eval v (Reverse p1 p2) = undefined
 eval v (Move p1 p2) = undefined

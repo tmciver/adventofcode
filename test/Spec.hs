@@ -11,12 +11,17 @@ evalUnitTests :: TestTree
 evalUnitTests = testGroup "Tests for `eval` function."
                 [ testCase "Test `eval` for `SwapPositions` operator." $
                   (eval (V.fromList "abcde") (SwapPositions 1 3)) `compare` (Just $ V.fromList "adcbe") @?= EQ
+
                 , testCase "Test `eval` for `SwapChars` operator." $
                   (eval (V.fromList "abcde") (SwapChars 'b' 'd')) `compare` (Just $ V.fromList "adcbe") @?= EQ
+
                 , testCase "Test `eval` for `RotateAbsolute` operator with a `Direction` of `Left`." $
                   (eval (V.fromList "abcde") (RotateAbsolute Left 3)) `compare` (Just $ V.fromList "deabc") @?= EQ
                 , testCase "Test `eval` for `RotateAbsolute` operator with a `Direction` of `Right`." $
                   (eval (V.fromList "abcde") (RotateAbsolute Right 3)) `compare` (Just $ V.fromList "cdeab") @?= EQ
-                , testCase "Test `eval` for `RotateByCharIndex` operator." $
+
+                , testCase "Test `eval` for `RotateByCharIndex` operator (1)." $
                   (eval (V.fromList "abcdefghijk") (RotateByCharIndex 'b')) `compare` (Just $ V.fromList "jkabcdefghi") @?= EQ
+                , testCase "Test `eval` for `RotateByCharIndex` operator (2)." $
+                  (eval (V.fromList "abcdefghijk") (RotateByCharIndex 'e')) `compare` (Just $ V.fromList "fghijkabcde") @?= EQ
                 ]

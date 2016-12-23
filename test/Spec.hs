@@ -31,4 +31,7 @@ evalUnitTests = testGroup "Tests for `eval` function."
 
                 , testCase "Test `eval` for `Reverse` operator." $
                   (eval (V.fromList "abcde") (Reverse 1 3)) `compare` (Just $ V.fromList "adcbe") @?= EQ
+
+                , testCase "Test `eval` for `Move` operator." $
+                  (eval (V.fromList "abcde") (Move 1 3)) `compare` (Just $ V.fromList "acdbe") @?= EQ
                 ]

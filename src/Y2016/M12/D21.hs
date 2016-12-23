@@ -96,8 +96,8 @@ eval v (Reverse p1 p2) = Just $ front V.++ (V.reverse middle) V.++ rear
   where (front, rest) = V.splitAt p1' v
         (middle, rear) = V.splitAt (p2' - p1' + 1) rest
         [p1',p2'] = sort [p1,p2]
-eval v (Move p1 p2) = (\(x,v) -> (insert p2 x v)) <$> (remove p1 v)
+eval v (Move p1 p2) = (insert p2) <$> (remove p1 v)
   where remove :: Int -> Vector a -> Maybe (a, Vector a)
         remove i v = (\x -> (x, (V.take i v) V.++ (V.drop (i + 1) v))) <$> (v !? i)
-        insert :: Int -> a -> Vector a -> Vector a
-        insert i x v = (V.take i v) V.++ (singleton x) V.++ (V.drop i v)
+        insert :: Int -> (a, Vector a) -> Vector a
+        insert i (x,v) = (V.take i v) V.++ (singleton x) V.++ (V.drop i v)

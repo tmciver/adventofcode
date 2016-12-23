@@ -60,7 +60,7 @@ the result of scrambling abcdefgh?
 -}
 
 import Prelude hiding (Either(..))
-import Data.Vector
+import Data.Vector as V
 
 type Position = Int
 type Steps = Int
@@ -85,9 +85,9 @@ eval v (SwapChars c1 c2) = Just $ fmap f v
           | c == c2 = c1
           | otherwise = c
 eval v (RotateAbsolute dir steps) = case dir of
-  Left -> Just $ (Data.Vector.drop normSteps v) Data.Vector.++ (Data.Vector.take normSteps v)
-  Right -> eval v (RotateAbsolute Left ((Data.Vector.length v) - normSteps))
-  where normSteps = mod steps (Data.Vector.length v)
+  Left -> Just $ (V.drop normSteps v) V.++ (V.take normSteps v)
+  Right -> eval v (RotateAbsolute Left ((V.length v) - normSteps))
+  where normSteps = mod steps (V.length v)
 eval v (RotateByCharIndex c) = maybeSteps >>= (\steps -> eval v (RotateAbsolute Right steps))
   where maybeSteps = fmap adjustSteps (elemIndex c v)
         adjustSteps i = 1 + i + if i >= 4 then 1 else 0

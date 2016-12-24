@@ -59,6 +59,7 @@ the result of scrambling abcdefgh?
 
 -}
 
+import Control.Monad as M
 import Prelude hiding (Either(..))
 import Data.List
 import Data.Vector as V
@@ -101,3 +102,6 @@ eval v (Move p1 p2) = (insert p2) <$> (remove p1 v)
         remove i v = (\x -> (x, (V.take i v) V.++ (V.drop (i + 1) v))) <$> (v !? i)
         insert :: Int -> (a, Vector a) -> Vector a
         insert i (x,v) = (V.take i v) V.++ (singleton x) V.++ (V.drop i v)
+
+run :: [Op] -> String -> Maybe String
+run ops s = toList <$> M.foldM eval (fromList s) ops

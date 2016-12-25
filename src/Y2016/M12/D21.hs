@@ -64,6 +64,7 @@ import Prelude hiding (Either(..))
 import qualified Data.Either as E
 import Data.Char
 import Data.List
+import qualified Data.List.Safe as Safe
 import Data.Vector as V
 
 type Position = Int
@@ -124,6 +125,10 @@ parse s | isPrefixOf "swap position" s =
                 maybeOp = SwapChars <$> v !? 12 <*> v !? 26
             in
               maybe (E.Left (MalformedCommandString "Could not parse one or both of the letters for a 'swap letters' command.")) E.Right maybeOp
+        | isPrefixOf "rotate left" s =
+            let maybeOp = RotateAbsolute Left . digitToInt <$> s Safe.!! 12
+            in
+              maybe (E.Left (MalformedCommandString "Could not parse index for a 'rotate left' command.")) E.Right maybeOp
         | isPrefixOf "rotate based on position of letter" s =
             let v = fromList s
                 maybeOp = RotateRelative <$> v !? 35

@@ -116,22 +116,15 @@ data OpParseError = MalformedCommandString String
 
 parse :: String -> E.Either OpParseError Op
 parse s | isPrefixOf "swap position" s =
-            let v = fromList s
-                maybeOp = SwapPositions <$> (digitToInt <$> v !? 14) <*> (digitToInt <$> v !? 30)
-            in
-              maybe (E.Left (MalformedCommandString "Could not parse one or both of the indexes for a 'swap position' command.")) E.Right maybeOp
+            let maybeOp = SwapPositions <$> (digitToInt <$> s Safe.!! 14) <*> (digitToInt <$> s Safe.!! 30) in
+            maybe (E.Left (MalformedCommandString "Could not parse one or both of the indexes for a 'swap position' command.")) E.Right maybeOp
         | isPrefixOf "swap letter" s =
-            let v = fromList s
-                maybeOp = SwapChars <$> v !? 12 <*> v !? 26
-            in
+            let maybeOp = SwapChars <$> s Safe.!! 12 <*> s Safe.!! 26 in
               maybe (E.Left (MalformedCommandString "Could not parse one or both of the letters for a 'swap letters' command.")) E.Right maybeOp
         | isPrefixOf "rotate left" s =
-            let maybeOp = RotateAbsolute Left . digitToInt <$> s Safe.!! 12
-            in
+            let maybeOp = RotateAbsolute Left . digitToInt <$> s Safe.!! 12 in
               maybe (E.Left (MalformedCommandString "Could not parse index for a 'rotate left' command.")) E.Right maybeOp
         | isPrefixOf "rotate based on position of letter" s =
-            let v = fromList s
-                maybeOp = RotateRelative <$> v !? 35
-            in
+            let maybeOp = RotateRelative <$> s Safe.!! 35 in
               maybe (E.Left (MalformedCommandString "Could not parse letter for a 'rotate relative' command.")) E.Right maybeOp
         | otherwise = E.Left (NonCommandString s)

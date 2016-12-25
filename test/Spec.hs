@@ -70,4 +70,6 @@ parseUnitTests = testGroup "Tests for `parse` function."
                    (parse "rotate right 5 steps") `compare` (E.Right (RotateAbsolute Right 5)) @?= EQ
                  , testCase "Test for parsing of `RotateAbsolute` command." $
                    (parse "rotate based on position of letter g") `compare` (E.Right (RotateRelative 'g')) @?= EQ
+                 , testCase "Test for parsing of `Reverse` command." $
+                   (parse "reverse positions 0 through 2") `compare` (E.Right (Reverse 0 2)) @?= EQ
                  ]

@@ -61,13 +61,15 @@ the result of scrambling abcdefgh?
 
 import Control.Monad as M
 import Prelude hiding (Either(..))
+import qualified Data.Either as E
+import Data.Char
 import Data.List
 import Data.Vector as V
 
 type Position = Int
 type Steps = Int
 
-data Direction = Left | Right
+data Direction = Left | Right deriving (Eq, Ord, Show)
 
 data Op = SwapPositions Position Position
         | SwapChars Char Char
@@ -75,6 +77,7 @@ data Op = SwapPositions Position Position
         | RotateByCharIndex Char
         | Reverse Position Position
         | Move Position Position
+        deriving (Eq, Ord, Show)
 
 eval :: Vector Char -> Op -> Maybe (Vector Char)
 eval v (SwapPositions p1 p2) = do
@@ -105,3 +108,18 @@ eval v (Move p1 p2) = (insert p2) <$> (remove p1 v)
 
 run :: [Op] -> String -> Maybe String
 run ops s = toList <$> M.foldM eval (fromList s) ops
+
+data OpParseError = MalformedCommandString String
+                  | NonCommandString String
+                  deriving (Eq, Ord, Show)
+
+parse :: String -> E.Either OpParseError Op
+parse s | isPrefixOf "swap position" s =
+            let v = fromList s
+                maybeOp = do
+                  i <- digitToInt <$> v !? 14
+                  j <- digitToInt <$> v !? 30
+                  return $ SwapPositions i j
+            in
+              maybe (E.Left (MalformedCommandString "Could not parse one or both of the indexes for a 'swap position' command.")) E.Right maybeOp
+        | otherwise = E.Left (NonCommandString s)

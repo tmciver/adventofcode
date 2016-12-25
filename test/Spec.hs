@@ -1,5 +1,6 @@
 
 import Prelude hiding (Either(..))
+import qualified Data.Either as E
 import Test.Tasty
 import Test.Tasty.HUnit
 import Y2016.M12.D21
@@ -8,7 +9,7 @@ import qualified Data.Vector as V
 main = defaultMain tests
 
 tests :: TestTree
-tests = testGroup "Tests" [evalUnitTests, runUnitTests]
+tests = testGroup "Tests" [evalUnitTests, runUnitTests, parseUnitTests]
 
 evalUnitTests :: TestTree
 evalUnitTests = testGroup "Tests for `eval` function."
@@ -54,3 +55,11 @@ runUnitTests = testGroup "Tests for `run` function."
                  in
                    (run ops "abcde") `compare` (Just "decab") @?= EQ
                ]
+
+parseUnitTests :: TestTree
+parseUnitTests = testGroup "Tests for `parse` function."
+                 [ testCase "Test for parsing of a non-command string (malformed command)." $
+                   (parse "blah blah blah") `compare` (E.Left (NonCommandString "blah blah blah")) @?= EQ
+                 , testCase "Test for parsing of `SwapPositions` command." $
+                   (parse "swap position 2 with position 7") `compare` (E.Right (SwapPositions 2 7)) @?= EQ
+                 ]

@@ -64,4 +64,6 @@ parseUnitTests = testGroup "Tests for `parse` function."
                    (parse "swap position 2 with position 7") `compare` (E.Right (SwapPositions 2 7)) @?= EQ
                  , testCase "Test for parsing of `SwapChars` command." $
                    (parse "swap letter f with letter a") `compare` (E.Right (SwapChars 'f' 'a')) @?= EQ
+                 , testCase "Test for parsing of `RotateRelative` command." $
+                   (parse "rotate based on position of letter g") `compare` (E.Right (RotateRelative 'g')) @?= EQ
                  ]

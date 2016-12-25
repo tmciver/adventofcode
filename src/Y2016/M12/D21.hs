@@ -116,25 +116,17 @@ data OpParseError = MalformedCommandString String
 parse :: String -> E.Either OpParseError Op
 parse s | isPrefixOf "swap position" s =
             let v = fromList s
-                maybeOp = do
-                  i <- digitToInt <$> v !? 14
-                  j <- digitToInt <$> v !? 30
-                  return $ SwapPositions i j
+                maybeOp = SwapPositions <$> (digitToInt <$> v !? 14) <*> (digitToInt <$> v !? 30)
             in
               maybe (E.Left (MalformedCommandString "Could not parse one or both of the indexes for a 'swap position' command.")) E.Right maybeOp
         | isPrefixOf "swap letter" s =
             let v = fromList s
-                maybeOp = do
-                  c <- v !? 12
-                  d <- v !? 26
-                  return $ SwapChars c d
+                maybeOp = SwapChars <$> v !? 12 <*> v !? 26
             in
               maybe (E.Left (MalformedCommandString "Could not parse one or both of the letters for a 'swap letters' command.")) E.Right maybeOp
         | isPrefixOf "rotate based on position of letter" s =
             let v = fromList s
-                maybeOp = do
-                  c <- v !? 35
-                  return $ RotateRelative c
+                maybeOp = RotateRelative <$> v !? 35
             in
               maybe (E.Left (MalformedCommandString "Could not parse letter for a 'rotate relative' command.")) E.Right maybeOp
         | otherwise = E.Left (NonCommandString s)

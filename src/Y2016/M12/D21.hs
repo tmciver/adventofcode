@@ -124,6 +124,9 @@ parse s | isPrefixOf "swap position" s =
         | isPrefixOf "rotate left" s =
             let maybeOp = RotateAbsolute Left . digitToInt <$> s Safe.!! 12 in
               maybe (E.Left (MalformedCommandString "Could not parse index for a 'rotate left' command.")) E.Right maybeOp
+        | isPrefixOf "rotate right" s =
+            let maybeOp = RotateAbsolute Right . digitToInt <$> s Safe.!! 13 in
+              maybe (E.Left (MalformedCommandString "Could not parse index for a 'rotate right' command.")) E.Right maybeOp
         | isPrefixOf "rotate based on position of letter" s =
             let maybeOp = RotateRelative <$> s Safe.!! 35 in
               maybe (E.Left (MalformedCommandString "Could not parse letter for a 'rotate relative' command.")) E.Right maybeOp

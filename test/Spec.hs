@@ -26,12 +26,12 @@ evalUnitTests = testGroup "Tests for `eval` function."
                 , testCase "Test `eval` for `RotateAbsolute` operator with a `Direction` of `Right` and large number of steps." $
                   (eval (V.fromList "abcde") (RotateAbsolute Right 7)) `compare` (Just $ V.fromList "deabc") @?= EQ
 
-                , testCase "Test `eval` for `RotateByCharIndex` operator (1)." $
-                  (eval (V.fromList "abcdefghijk") (RotateByCharIndex 'b')) `compare` (Just $ V.fromList "jkabcdefghi") @?= EQ
-                , testCase "Test `eval` for `RotateByCharIndex` operator (2)." $
-                  (eval (V.fromList "abcdefghijk") (RotateByCharIndex 'e')) `compare` (Just $ V.fromList "fghijkabcde") @?= EQ
-                , testCase "Test `eval` for `RotateByCharIndex` operator (3)." $
-                  (eval (V.fromList "abcde") (RotateByCharIndex 'e')) `compare` (Just $ V.fromList "eabcd") @?= EQ
+                , testCase "Test `eval` for `RotateRelative` operator (1)." $
+                  (eval (V.fromList "abcdefghijk") (RotateRelative 'b')) `compare` (Just $ V.fromList "jkabcdefghi") @?= EQ
+                , testCase "Test `eval` for `RotateRelative` operator (2)." $
+                  (eval (V.fromList "abcdefghijk") (RotateRelative 'e')) `compare` (Just $ V.fromList "fghijkabcde") @?= EQ
+                , testCase "Test `eval` for `RotateRelative` operator (3)." $
+                  (eval (V.fromList "abcde") (RotateRelative 'e')) `compare` (Just $ V.fromList "eabcd") @?= EQ
 
                 , testCase "Test `eval` for `Reverse` operator." $
                   (eval (V.fromList "abcde") (Reverse 1 3)) `compare` (Just $ V.fromList "adcbe") @?= EQ
@@ -49,8 +49,8 @@ runUnitTests = testGroup "Tests for `run` function."
                            , RotateAbsolute Left 1
                            , Move 1 4
                            , Move 3 0
-                           , RotateByCharIndex 'b'
-                           , RotateByCharIndex 'd'
+                           , RotateRelative 'b'
+                           , RotateRelative 'd'
                            ]
                  in
                    (run ops "abcde") `compare` (Just "decab") @?= EQ

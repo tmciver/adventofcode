@@ -74,7 +74,7 @@ data Direction = Left | Right deriving (Eq, Ord, Show)
 data Op = SwapPositions Position Position
         | SwapChars Char Char
         | RotateAbsolute Direction Steps
-        | RotateByCharIndex Char
+        | RotateRelative Char
         | Reverse Position Position
         | Move Position Position
         deriving (Eq, Ord, Show)
@@ -93,7 +93,7 @@ eval v (RotateAbsolute dir steps) = case dir of
   Left -> Just $ (V.drop normSteps v) V.++ (V.take normSteps v)
   Right -> eval v (RotateAbsolute Left ((V.length v) - normSteps))
   where normSteps = mod steps (V.length v)
-eval v (RotateByCharIndex c) = maybeSteps >>= (\steps -> eval v (RotateAbsolute Right steps))
+eval v (RotateRelative c) = maybeSteps >>= (\steps -> eval v (RotateAbsolute Right steps))
   where maybeSteps = fmap adjustSteps (V.elemIndex c v)
         adjustSteps i = 1 + i + if i >= 4 then 1 else 0
 eval v (Reverse p1 p2) = Just $ front V.++ (V.reverse middle) V.++ rear

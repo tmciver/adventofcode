@@ -62,4 +62,6 @@ parseUnitTests = testGroup "Tests for `parse` function."
                    (parse "blah blah blah") `compare` (E.Left (NonCommandString "blah blah blah")) @?= EQ
                  , testCase "Test for parsing of `SwapPositions` command." $
                    (parse "swap position 2 with position 7") `compare` (E.Right (SwapPositions 2 7)) @?= EQ
+                 , testCase "Test for parsing of `SwapChars` command." $
+                   (parse "swap letter f with letter a") `compare` (E.Right (SwapChars 'f' 'a')) @?= EQ
                  ]

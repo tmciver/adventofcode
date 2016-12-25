@@ -122,4 +122,12 @@ parse s | isPrefixOf "swap position" s =
                   return $ SwapPositions i j
             in
               maybe (E.Left (MalformedCommandString "Could not parse one or both of the indexes for a 'swap position' command.")) E.Right maybeOp
+        | isPrefixOf "swap letter" s =
+            let v = fromList s
+                maybeOp = do
+                  c <- v !? 12
+                  d <- v !? 26
+                  return $ SwapChars c d
+            in
+              maybe (E.Left (MalformedCommandString "Could not parse one or both of the letters for a 'swap letters' command.")) E.Right maybeOp
         | otherwise = E.Left (NonCommandString s)

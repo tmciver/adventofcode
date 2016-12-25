@@ -133,4 +133,7 @@ parse s | isPrefixOf "swap position" s =
         | isPrefixOf "reverse positions" s =
             let maybeOp = Reverse <$> (digitToInt <$> s Safe.!! 18) <*> (digitToInt <$> s Safe.!! 28) in
             maybe (E.Left (MalformedCommandString "Could not parse one or both of the indexes for a 'reverse' command.")) E.Right maybeOp
+        | isPrefixOf "move position" s =
+            let maybeOp = Move <$> (digitToInt <$> s Safe.!! 14) <*> (digitToInt <$> s Safe.!! 28) in
+            maybe (E.Left (MalformedCommandString "Could not parse one or both of the indexes for a 'move' command.")) E.Right maybeOp
         | otherwise = E.Left (NonCommandString s)

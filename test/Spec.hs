@@ -9,7 +9,7 @@ import qualified Data.Vector as V
 main = defaultMain tests
 
 tests :: TestTree
-tests = testGroup "Tests" [evalUnitTests, runUnitTests, parseUnitTests]
+tests = testGroup "Tests" [evalUnitTests, runUnitTests, parseUnitTests, testPhase1Answer]
 
 evalUnitTests :: TestTree
 evalUnitTests = testGroup "Tests for `eval` function."
@@ -75,3 +75,11 @@ parseUnitTests = testGroup "Tests for `parse` function."
                  , testCase "Test for parsing of `Move` command." $
                    (parse "move position 0 to position 6") `compare` (E.Right (Move 0 6)) @?= EQ
                  ]
+
+-- Answer to phase 1 of puzzle is "gbhcefad"
+testPhase1Answer :: TestTree
+testPhase1Answer = testCase "Test for the phase 1 answer using the given input data." $ do
+  content <- readFile "test/input.txt"
+  let cmdStrings = lines content
+  let eitherOps = sequence $ fmap parse cmdStrings
+  (flip run "abcdefgh" <$> eitherOps) `compare` (E.Right (Just "gbhcefad")) @?= EQ

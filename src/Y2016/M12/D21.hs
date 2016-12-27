@@ -96,18 +96,14 @@ eval v (RotateAbsolute dir steps) = case dir of
   Left -> Just $ (V.drop normSteps v) V.++ (V.take normSteps v)
   Right -> eval v (RotateAbsolute Left ((V.length v) - normSteps))
   where normSteps = mod steps (V.length v)
-eval v (RotateRelative dir c) = maybeSteps >>= (\steps -> eval v (RotateAbsolute dir steps))
-  where maybeSteps = (V.elemIndex c v) >>= maybeAdjustSteps
-        maybeAdjustSteps :: Int -> Maybe Int
-        maybeAdjustSteps i = case dir of
+eval v (RotateRelative dir c) = (V.elemIndex c v) >>= getSteps >>= eval v . (RotateAbsolute dir)
+  where getSteps :: Int -> Maybe Steps
+        getSteps i = case dir of
           Left -> f i
           Right -> Just $ 1 + i + if i >= 4 then 1 else 0
-        f :: Int -> Maybe Int
-        f 1 = Just 1
-        f 3 = Just 2
-        f 5 = Just 3
-        f 7 = Just 4
-        f x | even x && x >= 10 = Just $ x `div` 2 + 1
+        f :: Int -> Maybe Steps
+        f x | odd x && x > 0 && x <= 7 = Just $ (x + 1) `div` 2
+            | even x && x >= 10 = Just $ x `div` 2 + 1
             | otherwise = Nothing
 eval v (Reverse p1 p2) = Just $ front V.++ (V.reverse middle) V.++ rear
   where (front, rest) = V.splitAt p1' v

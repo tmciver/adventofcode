@@ -72,11 +72,13 @@ type Steps = Int
 
 data Direction = Left | Right deriving (Eq, Ord, Show)
 
-data Op = SwapPositions Position Position
-        | SwapChars Char Char
+-- Some of these operations are their own inverses, a.k.a. *involutions*, (see
+-- https://en.wikipedia.org/wiki/Involution_(mathematics)), some are not.
+data Op = SwapPositions Position Position -- involution
+        | SwapChars Char Char             -- involution
         | RotateAbsolute Direction Steps
-        | RotateRelative Char
-        | Reverse Position Position
+        | RotateRelative Direction Char
+        | Reverse Position Position       -- involution
         | Move Position Position
         deriving (Eq, Ord, Show)
 
@@ -94,9 +96,19 @@ eval v (RotateAbsolute dir steps) = case dir of
   Left -> Just $ (V.drop normSteps v) V.++ (V.take normSteps v)
   Right -> eval v (RotateAbsolute Left ((V.length v) - normSteps))
   where normSteps = mod steps (V.length v)
-eval v (RotateRelative c) = maybeSteps >>= (\steps -> eval v (RotateAbsolute Right steps))
-  where maybeSteps = fmap adjustSteps (V.elemIndex c v)
-        adjustSteps i = 1 + i + if i >= 4 then 1 else 0
+eval v (RotateRelative dir c) = maybeSteps >>= (\steps -> eval v (RotateAbsolute dir steps))
+  where maybeSteps = (V.elemIndex c v) >>= maybeAdjustSteps
+        maybeAdjustSteps :: Int -> Maybe Int
+        maybeAdjustSteps i = case dir of
+          Left -> f i
+          Right -> Just $ 1 + i + if i >= 4 then 1 else 0
+        f :: Int -> Maybe Int
+        f 1 = Just 1
+        f 3 = Just 2
+        f 5 = Just 3
+        f 7 = Just 4
+        f x | even x && x >= 10 = Just $ x `div` 2 + 1
+            | otherwise = Nothing
 eval v (Reverse p1 p2) = Just $ front V.++ (V.reverse middle) V.++ rear
   where (front, rest) = V.splitAt p1' v
         (middle, rear) = V.splitAt (p2' - p1' + 1) rest
@@ -128,7 +140,7 @@ parse s | isPrefixOf "swap position" s =
             let maybeOp = RotateAbsolute Right . digitToInt <$> s Safe.!! 13 in
               maybe (E.Left (MalformedCommandString "Could not parse index for a 'rotate right' command.")) E.Right maybeOp
         | isPrefixOf "rotate based on position of letter" s =
-            let maybeOp = RotateRelative <$> s Safe.!! 35 in
+            let maybeOp = RotateRelative Right <$> s Safe.!! 35 in
               maybe (E.Left (MalformedCommandString "Could not parse letter for a 'rotate relative' command.")) E.Right maybeOp
         | isPrefixOf "reverse positions" s =
             let maybeOp = Reverse <$> (digitToInt <$> s Safe.!! 18) <*> (digitToInt <$> s Safe.!! 28) in

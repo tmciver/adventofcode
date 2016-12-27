@@ -27,11 +27,13 @@ evalUnitTests = testGroup "Tests for `eval` function."
                   (eval (V.fromList "abcde") (RotateAbsolute Right 7)) `compare` (Just $ V.fromList "deabc") @?= EQ
 
                 , testCase "Test `eval` for `RotateRelative` operator (1)." $
-                  (eval (V.fromList "abcdefghijk") (RotateRelative 'b')) `compare` (Just $ V.fromList "jkabcdefghi") @?= EQ
-                , testCase "Test `eval` for `RotateRelative` operator (2)." $
-                  (eval (V.fromList "abcdefghijk") (RotateRelative 'e')) `compare` (Just $ V.fromList "fghijkabcde") @?= EQ
-                , testCase "Test `eval` for `RotateRelative` operator (3)." $
-                  (eval (V.fromList "abcde") (RotateRelative 'e')) `compare` (Just $ V.fromList "eabcd") @?= EQ
+                  (eval (V.fromList "abcdefghijk") (RotateRelative Right 'b')) `compare` (Just $ V.fromList "jkabcdefghi") @?= EQ
+                , testCase "Test `eval` for `RotateRelative Right` operator (2)." $
+                  (eval (V.fromList "abcdefghijk") (RotateRelative Right 'e')) `compare` (Just $ V.fromList "fghijkabcde") @?= EQ
+                , testCase "Test `eval` for `RotateRelative Left` operator (3)." $
+                  (eval (V.fromList "fghijkabcde") (RotateRelative Left 'e')) `compare` (Just $ V.fromList "abcdefghijk") @?= EQ
+                , testCase "Test `eval` for `RotateRelative` operator (4)." $
+                  (eval (V.fromList "abcde") (RotateRelative Right 'e')) `compare` (Just $ V.fromList "eabcd") @?= EQ
 
                 , testCase "Test `eval` for `Reverse` operator." $
                   (eval (V.fromList "abcde") (Reverse 1 3)) `compare` (Just $ V.fromList "adcbe") @?= EQ
@@ -49,8 +51,8 @@ runUnitTests = testGroup "Tests for `run` function."
                            , RotateAbsolute Left 1
                            , Move 1 4
                            , Move 3 0
-                           , RotateRelative 'b'
-                           , RotateRelative 'd'
+                           , RotateRelative Right 'b'
+                           , RotateRelative Right 'd'
                            ]
                  in
                    (run ops "abcde") `compare` (Just "decab") @?= EQ
@@ -69,7 +71,7 @@ parseUnitTests = testGroup "Tests for `parse` function."
                  , testCase "Test for parsing of `RotateRelative` (right) command." $
                    (parse "rotate right 5 steps") `compare` (E.Right (RotateAbsolute Right 5)) @?= EQ
                  , testCase "Test for parsing of `RotateAbsolute` command." $
-                   (parse "rotate based on position of letter g") `compare` (E.Right (RotateRelative 'g')) @?= EQ
+                   (parse "rotate based on position of letter g") `compare` (E.Right (RotateRelative Right 'g')) @?= EQ
                  , testCase "Test for parsing of `Reverse` command." $
                    (parse "reverse positions 0 through 2") `compare` (E.Right (Reverse 0 2)) @?= EQ
                  , testCase "Test for parsing of `Move` command." $

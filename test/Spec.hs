@@ -9,7 +9,12 @@ import qualified Data.Vector as V
 main = defaultMain tests
 
 tests :: TestTree
-tests = testGroup "Tests" [evalUnitTests, runUnitTests, parseUnitTests, testPhase1Answer]
+tests = testGroup "Tests" [ evalUnitTests
+                          , runUnitTests
+                          , parseUnitTests
+                          , testPhase1Answer
+                          , invertOpTests
+                          ]
 
 evalUnitTests :: TestTree
 evalUnitTests = testGroup "Tests for `eval` function."
@@ -77,6 +82,22 @@ parseUnitTests = testGroup "Tests for `parse` function."
                  , testCase "Test for parsing of `Move` command." $
                    (parse "move position 0 to position 6") `compare` (E.Right (Move 0 6)) @?= EQ
                  ]
+
+invertOpTests :: TestTree
+invertOpTests = testGroup "Tests for the `invertOp` function."
+                [ testCase "Test inversion of `SwapPositions`." $
+                  (invertOp (SwapPositions 2 5)) `compare` (SwapPositions 2 5) @?= EQ
+                , testCase "Test inversion of `SwapChars`." $
+                  (invertOp (SwapChars 'a' 'd')) `compare` (SwapChars 'a' 'd') @?= EQ
+                , testCase "Test inversion of `RotateAbsolute`." $
+                  (invertOp (RotateAbsolute Right 5)) `compare` (RotateAbsolute Left 5) @?= EQ
+                , testCase "Test inversion of `RotateRelative`." $
+                  (invertOp (RotateRelative Right 'c')) `compare` (RotateRelative Left 'c') @?= EQ
+                , testCase "Test inversion of `Reverse`." $
+                  (invertOp (Reverse 2 5)) `compare` (Reverse 2 5) @?= EQ
+                , testCase "Test inversion of `Move`." $
+                  (invertOp (Move 2 5)) `compare` (Move 5 2) @?= EQ
+                ]
 
 -- Answer to phase 1 of puzzle is "gbhcefad"
 testPhase1Answer :: TestTree

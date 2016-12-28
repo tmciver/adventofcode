@@ -115,6 +115,14 @@ eval v (Move p1 p2) = (insert p2) <$> (remove p1 v)
         insert :: Int -> (a, Vector a) -> Vector a
         insert i (x,v) = (V.take i v) V.++ (singleton x) V.++ (V.drop i v)
 
+invertOp :: Op -> Op
+invertOp op@(SwapPositions _ _) = op
+invertOp op@(SwapChars _ _) = op
+invertOp (RotateAbsolute dir steps) = RotateAbsolute (flipDirection dir) steps
+invertOp (RotateRelative dir c) = RotateRelative (flipDirection dir) c
+invertOp op@(Reverse _ _) = op
+invertOp (Move p1 p2) = Move p2 p1
+
 run :: [Op] -> String -> Maybe String
 run ops s = toList <$> M.foldM eval (fromList s) ops
 
@@ -145,3 +153,7 @@ parse s | isPrefixOf "swap position" s =
             let maybeOp = Move <$> (digitToInt <$> s Safe.!! 14) <*> (digitToInt <$> s Safe.!! 28) in
             maybe (E.Left (MalformedCommandString "Could not parse one or both of the indexes for a 'move' command.")) E.Right maybeOp
         | otherwise = E.Left (NonCommandString s)
+
+flipDirection :: Direction -> Direction
+flipDirection Left = Right
+flipDirection Right = Left

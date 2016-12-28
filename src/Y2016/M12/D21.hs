@@ -82,6 +82,8 @@ data Op = SwapPositions Position Position -- involution
         | Move Position Position
         deriving (Eq, Ord, Show)
 
+type Transformer = [Op]
+
 eval :: Vector Char -> Op -> Maybe (Vector Char)
 eval v (SwapPositions p1 p2) = do
   c1 <- v !? p1
@@ -123,7 +125,7 @@ invertOp (RotateRelative dir c) = RotateRelative (flipDirection dir) c
 invertOp op@(Reverse _ _) = op
 invertOp (Move p1 p2) = Move p2 p1
 
-run :: [Op] -> String -> Maybe String
+run :: Transformer -> String -> Maybe String
 run ops s = toList <$> M.foldM eval (fromList s) ops
 
 data OpParseError = MalformedCommandString String

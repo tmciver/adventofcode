@@ -64,20 +64,22 @@ inversionTests = let testFn s op = ((eval (V.fromList s) op) >>= (flip eval (inv
                  ]
 
 runUnitTests :: TestTree
-runUnitTests = testGroup "Tests for `run` function."
-               [ testCase "Test for test data given in puzzle description." $
-                 let ops = [ SwapPositions 0 4
-                           , SwapChars 'd' 'b'
-                           , Reverse 0 4
-                           , RotateAbsolute Left 1
-                           , Move 1 4
-                           , Move 3 0
-                           , RotateRelative Right 'b'
-                           , RotateRelative Right 'd'
-                           ]
-                 in
-                   (run ops "abcde") `compare` (Just "decab") @?= EQ
-               ]
+runUnitTests = let ops = [ SwapPositions 0 4
+                         , SwapChars 'd' 'b'
+                         , Reverse 0 4
+                         , RotateAbsolute Left 1
+                         , Move 1 4
+                         , Move 3 0
+                         , RotateRelative Right 'b'
+                         , RotateRelative Right 'd'
+                         ]
+                   invertedOps = invertTransformer ops
+               in testGroup "Tests for `run` function."
+                  [ testCase "Test for test data given in puzzle description." $
+                    (run ops "abcde") `compare` (Just "decab") @?= EQ
+                  , testCase "Test for inverting test data given in puzzle description." $
+                    (run invertedOps "decab") `compare` (Just "abcde") @?= EQ
+                  ]
 
 parseUnitTests :: TestTree
 parseUnitTests = testGroup "Tests for `parse` function."

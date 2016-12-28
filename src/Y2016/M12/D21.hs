@@ -63,9 +63,8 @@ import Control.Monad as M
 import Prelude hiding (Either(..))
 import qualified Data.Either as E
 import Data.Char
-import Data.List
-import qualified Data.List.Safe as Safe
-import Data.Vector as V
+import Data.List.Safe as Safe
+import qualified Data.Vector as V
 
 type Position = Int
 type Steps = Int
@@ -73,7 +72,7 @@ type Steps = Int
 data Direction = Left | Right deriving (Eq, Ord, Show)
 
 -- Some of these operations are their own inverses, a.k.a. *involutions*, (see
--- https://en.wikipedia.org/wiki/Involution_(mathematics)), some are not.
+-- https:V.//en.wikipedia.org/wiki/Involution_(mathematics)), some are not.
 data Op = SwapPositions Position Position -- involution
         | SwapChars Char Char             -- involution
         | RotateAbsolute Direction Steps
@@ -84,11 +83,11 @@ data Op = SwapPositions Position Position -- involution
 
 type Transformer = [Op]
 
-eval :: Vector Char -> Op -> Maybe (Vector Char)
+eval :: V.Vector Char -> Op -> Maybe (V.Vector Char)
 eval v (SwapPositions p1 p2) = do
-  c1 <- v !? p1
-  c2 <- v !? p2
-  return (v // [(p1, c2), (p2, c1)])
+  c1 <- v V.!? p1
+  c2 <- v V.!? p2
+  return (v V.// [(p1, c2), (p2, c1)])
 eval v (SwapChars c1 c2) = Just $ fmap f v
   where f c
           | c == c1 = c2
@@ -120,10 +119,10 @@ eval v (Reverse p1 p2) = Just $ front V.++ (V.reverse middle) V.++ rear
         (middle, rear) = V.splitAt (p2' - p1' + 1) rest
         [p1',p2'] = sort [p1,p2]
 eval v (Move p1 p2) = (insert p2) <$> (remove p1 v)
-  where remove :: Int -> Vector a -> Maybe (a, Vector a)
-        remove i v = (\x -> (x, (V.take i v) V.++ (V.drop (i + 1) v))) <$> (v !? i)
-        insert :: Int -> (a, Vector a) -> Vector a
-        insert i (x,v) = (V.take i v) V.++ (singleton x) V.++ (V.drop i v)
+  where remove :: Int -> V.Vector a -> Maybe (a, V.Vector a)
+        remove i v = (\x -> (x, (V.take i v) V.++ (V.drop (i + 1) v))) <$> (v V.!? i)
+        insert :: Int -> (a, V.Vector a) -> V.Vector a
+        insert i (x,v) = (V.take i v) V.++ (V.singleton x) V.++ (V.drop i v)
 
 invertOp :: Op -> Op
 invertOp op@(SwapPositions _ _) = op
@@ -133,8 +132,11 @@ invertOp (RotateRelative dir c) = RotateRelative (flipDirection dir) c
 invertOp op@(Reverse _ _) = op
 invertOp (Move p1 p2) = Move p2 p1
 
+invertTransformer :: Transformer -> Transformer
+invertTransformer = reverse . map invertOp
+
 run :: Transformer -> String -> Maybe String
-run ops s = toList <$> M.foldM eval (fromList s) ops
+run ops s = V.toList <$> M.foldM eval (V.fromList s) ops
 
 data OpParseError = MalformedCommandString String
                   | NonCommandString String

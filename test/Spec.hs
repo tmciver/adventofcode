@@ -14,6 +14,7 @@ tests = testGroup "Tests" [ evalUnitTests
                           , runUnitTests
                           , parseUnitTests
                           , testPhase1Answer
+                          , testPhase2Answer
                           , invertOpTests
                           ]
 
@@ -124,3 +125,11 @@ testPhase1Answer = testCase "Test for the phase 1 answer using the given input d
   let cmdStrings = lines content
   let eitherOps = sequence $ fmap parse cmdStrings
   (flip run "abcdefgh" <$> eitherOps) `compare` (E.Right (Just "gbhcefad")) @?= EQ
+
+-- Answer to phase 2 of puzzle is "gahedfcb"
+testPhase2Answer :: TestTree
+testPhase2Answer = testCase "Test for the phase 2 answer using the given input data." $ do
+  content <- readFile "test/input.txt"
+  let cmdStrings = lines content
+  let eitherOps = invertTransformer <$> (sequence $ fmap parse cmdStrings)
+  (flip run "fbgdceah" <$> eitherOps) `compare` (E.Right (Just "gahedfcb")) @?= EQ

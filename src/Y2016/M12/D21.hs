@@ -103,10 +103,18 @@ eval v (RotateRelative dir c) = (V.elemIndex c v) >>= getSteps >>= eval v . (Rot
         getSteps i = case dir of
           Left -> f i
           Right -> Just $ 1 + i + if i >= 4 then 1 else 0
+        -- this function seems to work for strings of length 5 and 8. It is not
+        -- known what other lengths will work.
         f :: Int -> Maybe Steps
-        f x | odd x && x > 0 && x <= 7 = Just $ (x + 1) `div` 2
-            | even x && x >= 10 = Just $ x `div` 2 + 1
-            | otherwise = Nothing
+        f 0 = Just 1
+        f 1 = Just 1
+        f 2 = Just 6
+        f 3 = Just 2
+        f 4 = Just 7
+        f 5 = Just 3
+        f 6 = Just 0
+        f 7 = Just 4
+        f _ = Nothing
 eval v (Reverse p1 p2) = Just $ front V.++ (V.reverse middle) V.++ rear
   where (front, rest) = V.splitAt p1' v
         (middle, rear) = V.splitAt (p2' - p1' + 1) rest

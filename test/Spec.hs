@@ -10,6 +10,7 @@ main = defaultMain tests
 
 tests :: TestTree
 tests = testGroup "Tests" [ evalUnitTests
+                          , inversionTests
                           , runUnitTests
                           , parseUnitTests
                           , testPhase1Answer
@@ -36,9 +37,9 @@ evalUnitTests = testGroup "Tests for `eval` function."
                 , testCase "Test `eval` for `RotateRelative Right` operator (2)." $
                   (eval (V.fromList "abcdefghijk") (RotateRelative Right 'e')) `compare` (Just $ V.fromList "fghijkabcde") @?= EQ
                 , testCase "Test `eval` for `RotateRelative Left` operator (3)." $
-                  (eval (V.fromList "fghijkabcde") (RotateRelative Left 'e')) `compare` (Just $ V.fromList "abcdefghijk") @?= EQ
+                  (eval (V.fromList "fghabcde") (RotateRelative Left 'e')) `compare` (Just $ V.fromList "bcdefgha") @?= EQ
                 , testCase "Test `eval` for `RotateRelative` operator (4)." $
-                  (eval (V.fromList "abcde") (RotateRelative Right 'e')) `compare` (Just $ V.fromList "eabcd") @?= EQ
+                  (eval (V.fromList "abcdefgh") (RotateRelative Right 'e')) `compare` (Just $ V.fromList "cdefghab") @?= EQ
 
                 , testCase "Test `eval` for `Reverse` operator." $
                   (eval (V.fromList "abcde") (Reverse 1 3)) `compare` (Just $ V.fromList "adcbe") @?= EQ
@@ -46,6 +47,21 @@ evalUnitTests = testGroup "Tests for `eval` function."
                 , testCase "Test `eval` for `Move` operator." $
                   (eval (V.fromList "abcde") (Move 1 3)) `compare` (Just $ V.fromList "acdbe") @?= EQ
                 ]
+
+inversionTests :: TestTree
+inversionTests = let testFn s op = ((eval (V.fromList s) op) >>= (flip eval (invertOp op))) `compare` (Just $ V.fromList s) @?= EQ
+                 in
+                   testGroup "Tests for `eval`ing inversions of `Op`s."
+                   [ testCase "Inversion test for `SwapPositions`." $ testFn "abcde" (SwapPositions 1 3)
+                   , testCase "Inversion test for `SwapChars`." $ testFn "abcde" (SwapChars 'b' 'd')
+                   , testCase "Inversion test for `RotateAbsolute` operator with a `Direction` of `Left`." $ testFn "abcde" (RotateAbsolute Left 3)
+                   , testCase "Inversion test for `RotateAbsolute` operator with a `Direction` of `Right`." $ testFn "abcde" (RotateAbsolute Right 3)
+                   , testCase "Inversion test for `RotateRelative` operator with a `Direction` of `Left`." $ testFn "abcde" (RotateRelative Left 'b')
+                   , testCase "Inversion test for `RotateRelative` operator with a `Direction` of `Right` (1)." $ testFn "abcde" (RotateRelative Right 'b')
+                   , testCase "Inversion test for `RotateRelative` operator with a `Direction` of `Right` (2)." $ testFn "abcdefgh" (RotateRelative Right 'e')
+                   , testCase "Inversion test for `Reverse` operator`." $ testFn "abcde" (Reverse 1 3)
+                   , testCase "Inversion test for `Move` operator`." $ testFn "abcde" (Move 1 3)
+                 ]
 
 runUnitTests :: TestTree
 runUnitTests = testGroup "Tests for `run` function."

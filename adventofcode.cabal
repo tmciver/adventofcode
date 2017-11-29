@@ -16,6 +16,7 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Y2016.D21
+                       Y2017.WarmUp
   build-depends:       base >= 4.7 && < 5
                      , listsafe
                      , vector

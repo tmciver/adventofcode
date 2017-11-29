@@ -1,9 +1,8 @@
-
 import Prelude hiding (Either(..))
 import qualified Data.Either as E
 import Test.Tasty
 import Test.Tasty.HUnit
-import Y2016.M12.D21
+import Y2016.D21
 import qualified Data.Vector as V
 
 main = defaultMain tests

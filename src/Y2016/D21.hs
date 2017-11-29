@@ -1,4 +1,4 @@
-module Y2016.M12.D21 where
+module Y2016.D21 where
 
 {-
 

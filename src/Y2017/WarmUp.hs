@@ -90,3 +90,6 @@ markers = reverse . snd . foldl f init
                 f :: (Point, [Marker]) -> Input -> (Point, [Marker])
                 f (p, markers) (DirectionInput dir) = (step p dir, markers)
                 f (p, markers) (ButtonInput _) = (p, p:markers)
+
+taxicabDistance :: Point -> Point -> Int
+taxicabDistance p1 p2 = abs (x p1 - x p2) + abs (y p1 - y p2)

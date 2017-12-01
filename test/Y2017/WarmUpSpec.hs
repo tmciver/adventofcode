@@ -4,11 +4,13 @@ import Prelude hiding (Either(..))
 import Test.Tasty
 import Test.Tasty.HUnit
 import Y2017.WarmUp
+import System.Random (randomIO)
 import System.Random.Shuffle (shuffleM)
 
 tests :: TestTree
 tests = testGroup "Warm Up Tests" [ testStep
                                   , testMarkers
+                                  , testTaxicabDistance
                                   ]
 
 testStep :: TestTree
@@ -37,3 +39,21 @@ testMarkers1 = testCase "`markers` function test 1" $ do
   let input = randomDirs ++ [ButtonInput A] ++ randomDirs' ++ [ButtonInput B]
       expectedMarkers = [Point 1 1, Point 2 2]
   (markers input) @?= expectedMarkers
+
+testTaxicabDistance :: TestTree
+testTaxicabDistance = testGroup "`taxicabDistance` function test"
+                      [ testTaxicabDistanceFromOrigin
+                      , testTaxicabDistanceForPoints]
+
+testTaxicabDistanceFromOrigin = testCase "test taxicab distance from origin" $ do
+  x <- randomIO
+  y <- randomIO
+  (taxicabDistance (Point 0 0) (Point x y) @?= x + y)
+
+testTaxicabDistanceForPoints = testCase "test taxicab distance for two Points" $ do
+  x1 <- randomIO
+  y1 <- randomIO
+  x2 <- randomIO
+  y2 <- randomIO
+  let expectedDistance = abs (x2 - x1) + abs (y2  - y1)
+  (taxicabDistance (Point x1 y1) (Point x2 y2)) @?= expectedDistance

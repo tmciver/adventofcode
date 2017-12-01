@@ -65,4 +65,28 @@ measured by the taxicab distance, and return that distance.
 
 -}
 
-data Input = Up | Down | Left | Right | A | B
+import Prelude hiding (Either(..))
+
+data Direction = Up | Down | Left | Right
+data Button =  A | B
+data Input = DirectionInput Direction
+           | ButtonInput Button
+data Point = Point { x :: Int
+                   , y :: Int
+                   } deriving (Eq, Show)
+type Marker = Point
+
+-- | Move the given 'Point' in the given 'Direction' yielding a new 'Point'.
+step :: Point -> Direction -> Point
+step p Up = p { y = y p + 1 }
+step p Right = p { x = x p + 1 }
+step p Down = p { y = y p - 1 }
+step p Left = p { x = x p - 1 }
+
+-- | Produce the list of 'Marker's from the sequence of 'Input's.
+markers :: [Input] -> [Marker]
+markers = reverse . snd . foldl f init
+          where init = (Point 0 0, [])
+                f :: (Point, [Marker]) -> Input -> (Point, [Marker])
+                f (p, markers) (DirectionInput dir) = (step p dir, markers)
+                f (p, markers) (ButtonInput _) = (p, p:markers)

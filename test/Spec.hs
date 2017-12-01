@@ -3,6 +3,7 @@ import qualified Data.Either as E
 import Test.Tasty
 import Test.Tasty.HUnit
 import Y2016.D21
+import qualified Y2017.WarmUpSpec as WarmUp
 import qualified Data.Vector as V
 
 main = defaultMain tests
@@ -15,6 +16,7 @@ tests = testGroup "Tests" [ evalUnitTests
                           , testPhase1Answer
                           , testPhase2Answer
                           , invertOpTests
+                          , WarmUp.tests
                           ]
 
 evalUnitTests :: TestTree

@@ -11,6 +11,7 @@ tests :: TestTree
 tests = testGroup "Warm Up Tests" [ testStep
                                   , testMarkers
                                   , testTaxicabDistance
+                                  , testStringToInput
                                   ]
 
 testStep :: TestTree
@@ -48,12 +49,36 @@ testTaxicabDistance = testGroup "`taxicabDistance` function test"
 testTaxicabDistanceFromOrigin = testCase "test taxicab distance from origin" $ do
   x <- randomIO
   y <- randomIO
-  (taxicabDistance (Point 0 0) (Point x y) @?= x + y)
+  (taxicabDistance (Point 0 0) (Point x y) @?= abs x + abs y)
 
 testTaxicabDistanceForPoints = testCase "test taxicab distance for two Points" $ do
   x1 <- randomIO
   y1 <- randomIO
   x2 <- randomIO
   y2 <- randomIO
-  let expectedDistance = abs (x2 - x1) + abs (y2  - y1)
-  (taxicabDistance (Point x1 y1) (Point x2 y2)) @?= expectedDistance
+  let p1 = (Point x1 y1)
+      p2 = (Point x2 y2)
+  let expectedDistance = abs (x2 - x1) + abs (y2 - y1)
+  (taxicabDistance p1 p2) @?= expectedDistance
+
+testStringToInput :: TestTree
+testStringToInput = testGroup "`stringToInput` function test"
+                    [ testStringToInputSuccess ]
+
+testStringToInputSuccess :: TestTree
+testStringToInputSuccess = testCase "`stringToInput` function success test" $
+                           let input = ["Left", "Right", "A", "Up", "Down", "B"]
+                               expected = [ DirectionInput Left
+                                          , DirectionInput Right
+                                          , ButtonInput A
+                                          , DirectionInput Up
+                                          , DirectionInput Down
+                                          , ButtonInput B]
+                           in
+                            stringToInput input @?= Just expected
+
+testStringToInputFailure :: TestTree
+testStringToInputFailure = testCase "`stringToInput` function success test" $
+                           let input = ["Left", "Rigt", "A", "Up", "Down", "B"]
+                           in
+                            stringToInput input @?= Nothing

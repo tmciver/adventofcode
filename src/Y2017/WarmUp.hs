@@ -67,10 +67,11 @@ measured by the taxicab distance, and return that distance.
 
 import Prelude hiding (Either(..))
 
-data Direction = Up | Down | Left | Right
-data Button =  A | B
+data Direction = Up | Down | Left | Right deriving (Eq, Show)
+data Button =  A | B deriving (Eq, Show)
 data Input = DirectionInput Direction
            | ButtonInput Button
+           deriving (Eq, Show)
 data Point = Point { x :: Int
                    , y :: Int
                    } deriving (Eq, Show)
@@ -92,4 +93,15 @@ markers = reverse . snd . foldl f init
                 f (p, markers) (ButtonInput _) = (p, p:markers)
 
 taxicabDistance :: Point -> Point -> Int
-taxicabDistance p1 p2 = abs (x p1 - x p2) + abs (y p1 - y p2)
+taxicabDistance p1 p2 = abs (x p2 - x p1) + abs (y p2 - y p1)
+
+stringToInput :: [String] -> Maybe [Input]
+stringToInput = mapM f
+                where f :: String -> Maybe Input
+                      f "Left" = Just $ DirectionInput Left
+                      f "Up" = Just $ DirectionInput Up
+                      f "Down" = Just $ DirectionInput Down
+                      f "Right" = Just $ DirectionInput Right
+                      f "A" = Just $ ButtonInput A
+                      f "B" = Just $ ButtonInput B
+                      f _ = Nothing

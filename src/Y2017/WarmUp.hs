@@ -113,4 +113,4 @@ strip = takeWhile (not . isSpace) . dropWhile isSpace
 
 stringToInputs :: String -> Maybe [Input]
 stringToInputs s = stringsToInputs strs
-  where strs = map strip (splitOn "," s)
+  where strs = init $ map strip (splitOn "," s)

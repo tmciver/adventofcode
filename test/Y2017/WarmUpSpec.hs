@@ -94,7 +94,7 @@ testStrip = testCase "`strip` function test" $
 
 testStringToInputs :: TestTree
 testStringToInputs = testCase "`stringToInputs` function test" $
-                     let inStr = "Left, Right, A, Up, Down, B"
+                     let inStr = "Left, Right, A, Up, Down, B, Start"
                          expected = [ DirectionInput Left
                                     , DirectionInput Right
                                     , ButtonInput A

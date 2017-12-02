@@ -66,6 +66,8 @@ measured by the taxicab distance, and return that distance.
 -}
 
 import Prelude hiding (Either(..))
+import Data.List.Split (splitOn)
+import Data.Char (isSpace)
 
 data Direction = Up | Down | Left | Right deriving (Eq, Show)
 data Button =  A | B deriving (Eq, Show)
@@ -105,3 +107,10 @@ stringsToInputs = mapM f
         f "A" = Just $ ButtonInput A
         f "B" = Just $ ButtonInput B
         f _ = Nothing
+
+strip :: String -> String
+strip = takeWhile (not . isSpace) . dropWhile isSpace
+
+stringToInputs :: String -> Maybe [Input]
+stringToInputs s = stringsToInputs strs
+  where strs = map strip (splitOn "," s)

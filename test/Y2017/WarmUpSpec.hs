@@ -9,9 +9,11 @@ import System.Random.Shuffle (shuffleM)
 
 tests :: TestTree
 tests = testGroup "Warm Up Tests" [ testStep
+                                  , testStrip
                                   , testMarkers
                                   , testTaxicabDistance
-                                  , testStringToInput
+                                  , testStringsToInputs
+                                  , testStringToInputs
                                   ]
 
 testStep :: TestTree
@@ -61,26 +63,44 @@ testTaxicabDistanceForPoints = testCase "test taxicab distance for two Points" $
   let expectedDistance = abs (x2 - x1) + abs (y2 - y1)
   (taxicabDistance p1 p2) @?= expectedDistance
 
-testStringToInput :: TestTree
-testStringToInput = testGroup "`stringToInput` function test"
-                    [ testStringsToInputsSuccess
-                    , testStringsToInputsFailure
-                    ]
+testStringsToInputs :: TestTree
+testStringsToInputs = testGroup "`stringToInput` function test"
+                      [ testStringsToInputsSuccess
+                      , testStringsToInputsFailure
+                      ]
 
 testStringsToInputsSuccess :: TestTree
-testStringsToInputsSuccess = testCase "`stringToInput` function success test" $
+testStringsToInputsSuccess = testCase "`stringsToInputs` function success test" $
                              let input = ["Left", "Right", "A", "Up", "Down", "B"]
                                  expected = [ DirectionInput Left
                                             , DirectionInput Right
                                             , ButtonInput A
                                             , DirectionInput Up
                                             , DirectionInput Down
-                                            , ButtonInput B]
+                                            , ButtonInput B
+                                            ]
                              in
                               stringsToInputs input @?= Just expected
 
 testStringsToInputsFailure :: TestTree
-testStringsToInputsFailure = testCase "`stringToInput` function failure test" $
+testStringsToInputsFailure = testCase "`stringsToInputs` function failure test" $
                              let input = ["Left", "Rigt", "A", "Up", "Down", "B"]
                              in
                               stringsToInputs input @?= Nothing
+
+testStrip :: TestTree
+testStrip = testCase "`strip` function test" $
+            strip " Left " @?= "Left"
+
+testStringToInputs :: TestTree
+testStringToInputs = testCase "`stringToInputs` function test" $
+                     let inStr = "Left, Right, A, Up, Down, B"
+                         expected = [ DirectionInput Left
+                                    , DirectionInput Right
+                                    , ButtonInput A
+                                    , DirectionInput Up
+                                    , DirectionInput Down
+                                    , ButtonInput B
+                                    ]
+                     in
+                      stringToInputs inStr @?= Just expected

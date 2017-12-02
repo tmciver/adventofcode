@@ -63,22 +63,24 @@ testTaxicabDistanceForPoints = testCase "test taxicab distance for two Points" $
 
 testStringToInput :: TestTree
 testStringToInput = testGroup "`stringToInput` function test"
-                    [ testStringToInputSuccess ]
+                    [ testStringsToInputsSuccess
+                    , testStringsToInputsFailure
+                    ]
 
-testStringToInputSuccess :: TestTree
-testStringToInputSuccess = testCase "`stringToInput` function success test" $
-                           let input = ["Left", "Right", "A", "Up", "Down", "B"]
-                               expected = [ DirectionInput Left
-                                          , DirectionInput Right
-                                          , ButtonInput A
-                                          , DirectionInput Up
-                                          , DirectionInput Down
-                                          , ButtonInput B]
-                           in
-                            stringToInput input @?= Just expected
+testStringsToInputsSuccess :: TestTree
+testStringsToInputsSuccess = testCase "`stringToInput` function success test" $
+                             let input = ["Left", "Right", "A", "Up", "Down", "B"]
+                                 expected = [ DirectionInput Left
+                                            , DirectionInput Right
+                                            , ButtonInput A
+                                            , DirectionInput Up
+                                            , DirectionInput Down
+                                            , ButtonInput B]
+                             in
+                              stringsToInputs input @?= Just expected
 
-testStringToInputFailure :: TestTree
-testStringToInputFailure = testCase "`stringToInput` function success test" $
-                           let input = ["Left", "Rigt", "A", "Up", "Down", "B"]
-                           in
-                            stringToInput input @?= Nothing
+testStringsToInputsFailure :: TestTree
+testStringsToInputsFailure = testCase "`stringToInput` function failure test" $
+                             let input = ["Left", "Rigt", "A", "Up", "Down", "B"]
+                             in
+                              stringsToInputs input @?= Nothing

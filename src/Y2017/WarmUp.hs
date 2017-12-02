@@ -95,13 +95,13 @@ markers = reverse . snd . foldl f init
 taxicabDistance :: Point -> Point -> Int
 taxicabDistance p1 p2 = abs (x p2 - x p1) + abs (y p2 - y p1)
 
-stringToInput :: [String] -> Maybe [Input]
-stringToInput = mapM f
-                where f :: String -> Maybe Input
-                      f "Left" = Just $ DirectionInput Left
-                      f "Up" = Just $ DirectionInput Up
-                      f "Down" = Just $ DirectionInput Down
-                      f "Right" = Just $ DirectionInput Right
-                      f "A" = Just $ ButtonInput A
-                      f "B" = Just $ ButtonInput B
-                      f _ = Nothing
+stringsToInputs :: [String] -> Maybe [Input]
+stringsToInputs = mapM f
+  where f :: String -> Maybe Input
+        f "Left" = Just $ DirectionInput Left
+        f "Up" = Just $ DirectionInput Up
+        f "Down" = Just $ DirectionInput Down
+        f "Right" = Just $ DirectionInput Right
+        f "A" = Just $ ButtonInput A
+        f "B" = Just $ ButtonInput B
+        f _ = Nothing

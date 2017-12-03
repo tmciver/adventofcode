@@ -106,15 +106,23 @@ testStringToInputs = testCase "`stringToInputs` function test" $
                      in
                       stringToInputs inStr @?= Just expected
 
+answer1 :: [Marker] -> Assertion
+answer1 markers = do
+  let origin = Point 0 0
+      furthestMarkerDistance = furthestFromOrigin markers
+      furthestMarkerDistanceExpected = 86
+  furthestMarkerDistance @?= furthestMarkerDistanceExpected
+
+answer2 :: [Marker] -> Assertion
+answer2 markers = do
+  let furthestPairDistance' = furthestPairDistance markers
+      furthestPairDistanceExpected = 137
+  furthestPairDistance' @?= furthestPairDistanceExpected
+
 answers :: TestTree
 answers = testCase "The Answers!" $ do
   s <- readFile "src/Y2017/WarmUpInput.txt"
   let markers' = maybe [] markers (stringToInputs s)
-      origin = Point 0 0
-      furthestMarkerDistance = furthestFromOrigin markers'
-      furthestMarkerDistanceExpected = 86
-      furthestPairDistance' = furthestPairDistance markers'
-      furthestPairDistanceExpected = 137
-  _ <- furthestMarkerDistance @?= furthestMarkerDistanceExpected
-  _ <- furthestPairDistance' @?= furthestPairDistanceExpected
+  _ <- answer1 markers'
+  _ <- answer2 markers'
   return ()

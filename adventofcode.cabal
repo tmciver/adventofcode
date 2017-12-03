@@ -26,7 +26,8 @@ library
 test-suite adventofcode-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
-  other-modules:       Y2017.WarmUpSpec
+  other-modules:       Y2016.D21Test
+                       Y2017.WarmUpSpec
   main-is:             Spec.hs
   build-depends:       base
                      , adventofcode

@@ -14,6 +14,7 @@ tests = testGroup "Warm Up Tests" [ testStep
                                   , testTaxicabDistance
                                   , testStringsToInputs
                                   , testStringToInputs
+                                  , answers
                                   ]
 
 testStep :: TestTree
@@ -104,3 +105,16 @@ testStringToInputs = testCase "`stringToInputs` function test" $
                                     ]
                      in
                       stringToInputs inStr @?= Just expected
+
+answers :: TestTree
+answers = testCase "The Answers!" $ do
+  s <- readFile "src/Y2017/WarmUpInput.txt"
+  let markers' = maybe [] markers (stringToInputs s)
+      origin = Point 0 0
+      furthestMarkerDistance = furthestFromOrigin markers'
+      furthestMarkerDistanceExpected = 86
+      furthestPairDistance' = furthestPairDistance markers'
+      furthestPairDistanceExpected = 137
+  _ <- furthestMarkerDistance @?= furthestMarkerDistanceExpected
+  _ <- furthestPairDistance' @?= furthestPairDistanceExpected
+  return ()

@@ -114,3 +114,15 @@ strip = takeWhile (not . isSpace) . dropWhile isSpace
 stringToInputs :: String -> Maybe [Input]
 stringToInputs s = stringsToInputs strs
   where strs = init $ map strip (splitOn "," s)
+
+furthestFromOrigin :: [Marker] -> Int
+furthestFromOrigin = maximum . map (taxicabDistance origin)
+  where origin = Point 0 0
+
+furthestPairDistance :: [Marker] -> Int
+furthestPairDistance = maximum . allDistances
+  where allDistances :: [Marker] -> [Int]
+        allDistances markers = do
+          marker1 <- markers
+          marker2 <- markers
+          return $ taxicabDistance marker1 marker2

@@ -56,12 +56,16 @@ Question 1:
 Identify the marker furthest from the origin, as measured by the taxicab
 distance, and return that distance.
 
+Answer: 86
+
 
 Question 2:
 
 Consider all pairs of *different* markers (where a pair may consist of any 'A'
 and any 'B' marker). Identify the pair maximally far apart from one another, as
 measured by the taxicab distance, and return that distance.
+
+Answer: 137
 
 -}
 

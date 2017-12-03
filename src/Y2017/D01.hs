@@ -46,9 +46,19 @@ is the last digit, 9.
 
 -}
 
+import Data.Char (isDigit, digitToInt)
+
 captcha :: [Int] -> Int
 captcha = sum . (map fst) . (filter equalPair) . pairs
   where pairs :: [a] -> [(a, a)]
         pairs l = zip l (tail (l ++ l))
         equalPair :: Eq a => (a, a) -> Bool
         equalPair (x, y) = x == y
+
+charToInt :: Char -> Maybe Int
+charToInt c = if isDigit c
+              then Just $ digitToInt c
+              else Nothing
+
+stringToInts :: String -> [Int]
+stringToInts s = maybe [] id (mapM charToInt s)

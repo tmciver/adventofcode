@@ -5,7 +5,9 @@ import Test.Tasty.HUnit
 import Y2017.D01
 
 tests :: TestTree
-tests = testGroup "Tests for day 1, 2017" [ testCaptcha ]
+tests = testGroup "Tests for day 1, 2017" [ testCaptcha
+                                          , testStringToInts
+                                          ]
 
 testCaptcha :: TestTree
 testCaptcha = testGroup "`captcha` function test"
@@ -14,3 +16,8 @@ testCaptcha = testGroup "`captcha` function test"
               , testCase "example 3" $ captcha [1,2,3,4] @?= 0
               , testCase "example 4" $ captcha [9,1,2,1,2,1,2,9] @?= 9
               ]
+
+testStringToInts :: TestTree
+testStringToInts = testGroup "`stringToInts` function test" $
+                   [ testCase "test success" $ stringToInts "123" @?= [1,2,3]
+                   , testCase "test failure" $ stringToInts "123a" @?= []]

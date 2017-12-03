@@ -106,23 +106,30 @@ testStringToInputs = testCase "`stringToInputs` function test" $
                      in
                       stringToInputs inStr @?= Just expected
 
-answer1 :: [Marker] -> Assertion
-answer1 markers = do
+answer1 :: IO [Marker] -> TestTree
+answer1 markersIo = testCase "verify answer 1" $ do
+  markers <- markersIo
   let origin = Point 0 0
       furthestMarkerDistance = furthestFromOrigin markers
       furthestMarkerDistanceExpected = 86
   furthestMarkerDistance @?= furthestMarkerDistanceExpected
 
-answer2 :: [Marker] -> Assertion
-answer2 markers = do
+answer2 :: IO [Marker] -> TestTree
+answer2 markersIo = testCase "verify answer 2" $ do
+  markers <- markersIo
   let furthestPairDistance' = furthestPairDistance markers
       furthestPairDistanceExpected = 137
   furthestPairDistance' @?= furthestPairDistanceExpected
 
 answers :: TestTree
-answers = testCase "The Answers!" $ do
-  s <- readFile "src/Y2017/WarmUpInput.txt"
-  let markers' = maybe [] markers (stringToInputs s)
-  _ <- answer1 markers'
-  _ <- answer2 markers'
-  return ()
+answers = withResource getMarkers (const $ return ()) tests
+  where getMarkers :: IO [Marker]
+        getMarkers = do
+          s <- readFile "src/Y2017/WarmUpInput.txt"
+          let markers' = maybe [] markers (stringToInputs s)
+          return markers'
+        tests :: IO [Marker] -> TestTree
+        tests ioMarkers = testGroup "test for answers"
+                          [ answer1 ioMarkers
+                          , answer2 ioMarkers
+                          ]

@@ -49,6 +49,6 @@ is the last digit, 9.
 captcha :: [Int] -> Int
 captcha = sum . (map fst) . (filter equalPair) . pairs
   where pairs :: [a] -> [(a, a)]
-        pairs l = zip l (tail l)
+        pairs l = zip l (tail (l ++ l))
         equalPair :: Eq a => (a, a) -> Bool
         equalPair (x, y) = x == y

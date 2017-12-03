@@ -17,6 +17,7 @@ library
   hs-source-dirs:      src
   exposed-modules:     Y2016.D21
                        Y2017.WarmUp
+                       Y2017.D01
   build-depends:       base >= 4.7 && < 5
                      , listsafe
                      , vector
@@ -28,6 +29,7 @@ test-suite adventofcode-test
   hs-source-dirs:      test
   other-modules:       Y2016.D21Test
                        Y2017.WarmUpSpec
+                       Y2017.D01Test
   main-is:             Spec.hs
   build-depends:       base
                      , adventofcode

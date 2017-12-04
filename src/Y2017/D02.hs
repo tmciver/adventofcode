@@ -40,3 +40,11 @@ type Row = NE.NonEmpty Int
 
 parseRow :: String -> Maybe Row
 parseRow = NE.nonEmpty . (map read) . (splitOn "\t")
+
+parseRows :: String -> [Row]
+parseRows = (maybe [] id) . (mapM parseRow) . lines
+
+rowChecksum :: Row -> Int
+rowChecksum r = h - l
+  where h = maximum r
+        l = minimum r

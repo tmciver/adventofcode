@@ -48,3 +48,6 @@ rowChecksum :: Row -> Int
 rowChecksum r = h - l
   where h = maximum r
         l = minimum r
+
+checksum :: [Row] -> Int
+checksum = sum . (map rowChecksum)

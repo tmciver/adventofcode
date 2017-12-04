@@ -18,10 +18,12 @@ library
   exposed-modules:     Y2016.D21
                        Y2017.WarmUp
                        Y2017.D01
+                       Y2017.D02
   build-depends:       base >= 4.7 && < 5
                      , listsafe
                      , vector
                      , split
+                     , semigroups
   default-language:    Haskell2010
 
 test-suite adventofcode-test
@@ -30,6 +32,7 @@ test-suite adventofcode-test
   other-modules:       Y2016.D21Test
                        Y2017.WarmUpSpec
                        Y2017.D01Test
+                       Y2017.D02Test
   main-is:             Spec.hs
   build-depends:       base
                      , adventofcode

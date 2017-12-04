@@ -10,6 +10,7 @@ tests = testGroup "Tests for day 2, 2017"
         [ parseRowTest
         , rowChecksumTest
         , checksumTest
+        , answerTest
         ]
 
 parseRowTest :: TestTree
@@ -32,3 +33,11 @@ checksumTest = testCase "`checksum` function test" $ do
              ]
       expected = 18
   checksum rows @?= expected
+
+answerTest :: TestTree
+answerTest = testCase "answer test" $ do
+  s <- readFile "test/Y2017/D02Input.txt"
+  let spreadsheet = parseRows s
+      sum = checksum spreadsheet
+      expectedSum = 42299
+  sum @?= expectedSum

@@ -82,6 +82,12 @@ captcha1 = captcha pairs
   where pairs :: [a] -> [(a, a)]
         pairs l = zip l (tail (l ++ l))
 
+captcha2 :: (Num a, Eq a) => [a] -> a
+captcha2 = captcha pairs
+  where halfway l = length l `div` 2
+        pairs :: [a] -> [(a, a)]
+        pairs l = zip l (drop (halfway l) (l ++ l))
+
 charToInt :: Char -> Maybe Int
 charToInt c = if isDigit c
               then Just $ digitToInt c

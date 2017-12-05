@@ -44,5 +44,4 @@ testAnswer = testGroup "test for answers"
                   let answer = captcha2 $ stringToInts (init s)
                       expectedAnswer = 1152
                   answer @?= expectedAnswer
-                  --putStrLn $ "answer 2: " ++ show answer
              ]

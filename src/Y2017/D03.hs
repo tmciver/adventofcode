@@ -37,9 +37,45 @@ Your puzzle input is 325489.
 
 -}
 
+import Prelude hiding (Either(..))
+
+type Address = Int
 data Point = Point { x :: Int
                    , y :: Int
                    } deriving (Eq, Show)
+data Direction = Right | Up | Left | Down deriving (Enum)
+data SquareElement = SquareElement { side :: Int
+                                   , address :: Address
+                                   , point :: Point
+                                   , direction :: Direction
+                                   , distanceAlongSide :: Int
+                                   }
 
-numToPoint :: Int -> Point
-numToPoint _ = undefined
+nextDirection :: Direction -> Direction
+nextDirection Down = Right
+nextDirection dir = succ dir
+
+advancePoint :: Point -> Direction -> Point
+advancePoint p Up = p { y = y p + 1 }
+advancePoint p Right = p { x = x p + 1 }
+advancePoint p Down = p { y = y p - 1 }
+advancePoint p Left = p { x = x p - 1 }
+
+nextElement :: SquareElement -> SquareElement
+nextElement (SquareElement side addr p dir dist) = case dir of
+  Right | dist == side -> SquareElement (side + 2) (addr + 1) (advancePoint p Right) Up 2
+  dir | dist == side -> SquareElement side (addr + 1) (advancePoint p (nextDirection dir)) (nextDirection dir) 2
+  dir -> SquareElement side (addr + 1) (advancePoint p dir) dir (dist + 1)
+
+memory :: [SquareElement]
+memory = iterate nextElement initialElement
+  where initialElement = SquareElement 1 1 (Point 0 0) Right 1
+
+addressToPoint :: Address -> Point
+addressToPoint addr = point $ memory !! (addr - 1)
+
+manhattanDistance :: Point -> Int
+manhattanDistance (Point x y) = abs x + abs y
+
+addressToManhattanDistance :: Address -> Int
+addressToManhattanDistance = manhattanDistance . addressToPoint

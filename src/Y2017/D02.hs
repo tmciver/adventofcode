@@ -72,11 +72,12 @@ import Control.Monad (guard)
 
 type Row = NE.NonEmpty Int
 type RowSummer = Row -> Int
+type Spreadsheet = [Row]
 
 parseRow :: String -> Maybe Row
 parseRow = NE.nonEmpty . (map read) . (splitOn "\t")
 
-parseRows :: String -> [Row]
+parseRows :: String -> Spreadsheet
 parseRows = (maybe [] id) . (mapM parseRow) . lines
 
 rowChecksum1 :: RowSummer
@@ -91,13 +92,13 @@ rowChecksum2 r = let evenlyDivisibleNel = do
                        return (x `div` y)
                  in head evenlyDivisibleNel
 
-checksum :: RowSummer -> [Row] -> Int
+checksum :: RowSummer -> Spreadsheet -> Int
 checksum summer = sum . (map summer)
 
 -- checksum for part 1
-checksum1 :: [Row] -> Int
+checksum1 :: Spreadsheet -> Int
 checksum1 = checksum rowChecksum1
 
 -- checksum for part 1
-checksum2 :: [Row] -> Int
+checksum2 :: Spreadsheet -> Int
 checksum2 = checksum rowChecksum2

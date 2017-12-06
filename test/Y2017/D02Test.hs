@@ -32,12 +32,12 @@ checksumTest = testCase "`checksum` function test" $ do
              , 2 :| [4,6,8]
              ]
       expected = 18
-  checksum rows @?= expected
+  checksum1 rows @?= expected
 
 answerTest :: TestTree
 answerTest = testCase "answer test" $ do
   s <- readFile "test/Y2017/D02Input.txt"
   let spreadsheet = parseRows s
-      sum = checksum spreadsheet
+      sum = checksum1 spreadsheet
       expectedSum = 42299
   sum @?= expectedSum

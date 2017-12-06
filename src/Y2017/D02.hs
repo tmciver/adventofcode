@@ -68,6 +68,7 @@ What is the sum of each row's result in your puzzle input?
 
 import qualified Data.List.NonEmpty as NE
 import Data.List.Split (splitOn)
+import Control.Monad (guard)
 
 type Row = NE.NonEmpty Int
 type RowSummer = Row -> Int
@@ -78,12 +79,25 @@ parseRow = NE.nonEmpty . (map read) . (splitOn "\t")
 parseRows :: String -> [Row]
 parseRows = (maybe [] id) . (mapM parseRow) . lines
 
-rowChecksum :: RowSummer
-rowChecksum r = maximum r - minimum r
+rowChecksum1 :: RowSummer
+rowChecksum1 r = maximum r - minimum r
+
+rowChecksum2 :: RowSummer
+rowChecksum2 r = let evenlyDivisibleNel = do
+                       x <- NE.toList r
+                       y <- NE.toList r
+                       guard (x /= y)
+                       guard (x `mod` y == 0)
+                       return (x `div` y)
+                 in head evenlyDivisibleNel
 
 checksum :: RowSummer -> [Row] -> Int
 checksum summer = sum . (map summer)
 
 -- checksum for part 1
 checksum1 :: [Row] -> Int
-checksum1 = checksum rowChecksum
+checksum1 = checksum rowChecksum1
+
+-- checksum for part 1
+checksum2 :: [Row] -> Int
+checksum2 = checksum rowChecksum2

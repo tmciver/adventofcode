@@ -20,6 +20,7 @@ library
                        Y2017.D01
                        Y2017.D02
                        Y2017.D03
+                       Y2019.D01
   build-depends:       base >= 4.7 && < 5
                      , listsafe
                      , vector
@@ -34,6 +35,7 @@ test-suite adventofcode-test
                        Y2017.D01Test
                        Y2017.D02Test
                        Y2017.D03Test
+                       Y2019.D01Test
   main-is:             Spec.hs
   build-depends:       base
                      , adventofcode

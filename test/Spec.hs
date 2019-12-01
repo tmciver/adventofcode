@@ -4,6 +4,7 @@ import qualified Y2017.WarmUpSpec
 import qualified Y2017.D01Test
 import qualified Y2017.D02Test
 import qualified Y2017.D03Test
+import qualified Y2019.D01Test
 
 main = defaultMain tests
 
@@ -13,6 +14,7 @@ tests = testGroup "Tests" [ Y2016.D21Test.tests
                           , Y2017.D01Test.tests
                           , Y2017.D02Test.tests
                           , Y2017.D03Test.tests
+                          , Y2019.D01Test.tests
                           ]
 
 

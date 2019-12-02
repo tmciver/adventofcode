@@ -11,10 +11,10 @@ testCalculateFuelMass :: TestTree
 testCalculateFuelMass = testGroup "Tests for 'calculateFuelMass'"
                     [ testCase "for mass of 12" $ calculateFuelMass 12 @?= 2
                     , testCase "for mass of 14" $ calculateFuelMass 14 @?= 2
-                    , testCase "for mass of 1969" $ calculateFuelMass 1969 @?= 654
-                    , testCase "for mass of 100756" $ calculateFuelMass 100756 @?= 33583
+                    , testCase "for mass of 1969" $ calculateFuelMass 1969 @?= 966
+                    , testCase "for mass of 100756" $ calculateFuelMass 100756 @?= 50346
                     ]
 
 testTotalFuelMass :: TestTree
 testTotalFuelMass = testCase "total fuel requirement" $
-  totalFuelMass "test/Y2019/D01Input.txt" >>= \tf -> tf @?= 3239503
+  totalFuelMass "test/Y2019/D01Input.txt" >>= \tf -> tf @?= 4856390

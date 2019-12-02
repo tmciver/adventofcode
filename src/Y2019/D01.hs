@@ -79,7 +79,10 @@ end.)
 type Mass = Int
 
 calculateFuelMass :: Mass -> Mass
-calculateFuelMass m = m `div` 3 - 2
+calculateFuelMass m = if fuelMass > 0 then
+  fuelMass + calculateFuelMass fuelMass
+  else 0
+  where fuelMass = m `div` 3 - 2
 
 sumMass :: [Mass] -> Mass
 sumMass = sum

@@ -87,10 +87,15 @@ calculateFuelMass m = if fuelMass > 0 then
 sumMass :: [Mass] -> Mass
 sumMass = sum
 
-totalFuelMass :: FilePath -> IO Mass
-totalFuelMass fileName = do
+readModuleMasses :: FilePath -> IO [Mass]
+readModuleMasses fileName = do
   contents <- readFile fileName
   let ls = lines contents
       masses = read <$> ls
-      fuels = calculateFuelMass <$> masses
-  pure $ sumMass fuels
+  pure masses
+
+totalFuelMass :: FilePath -> IO Mass
+totalFuelMass fileName = do
+  masses <- readModuleMasses fileName
+  let fuelMasses = calculateFuelMass <$> masses
+  pure $ sumMass fuelMasses

@@ -43,3 +43,14 @@ type Fuel = Int
 
 calculateFuel :: Mass -> Fuel
 calculateFuel m = m `div` 3 - 2
+
+sumFuel :: [Fuel] -> Fuel
+sumFuel = sum
+
+totalFuel :: FilePath -> IO Fuel
+totalFuel fileName = do
+  contents <- readFile fileName
+  let ls = lines contents
+      masses = read <$> ls
+      fuels = calculateFuel <$> masses
+  pure $ sumFuel fuels

@@ -5,16 +5,16 @@ import Test.Tasty.HUnit
 import Y2019.D01
 
 tests :: TestTree
-tests = testGroup "Tests for day 1, 2019" [testCalculateFuel, testTotalFuel]
+tests = testGroup "Tests for day 1, 2019" [testCalculateFuelMass, testTotalFuelMass]
 
-testCalculateFuel :: TestTree
-testCalculateFuel = testGroup "Tests for 'calculateFuel'"
-                    [ testCase "for mass of 12" $ calculateFuel 12 @?= 2
-                    , testCase "for mass of 14" $ calculateFuel 14 @?= 2
-                    , testCase "for mass of 1969" $ calculateFuel 1969 @?= 654
-                    , testCase "for mass of 100756" $ calculateFuel 100756 @?= 33583
+testCalculateFuelMass :: TestTree
+testCalculateFuelMass = testGroup "Tests for 'calculateFuelMass'"
+                    [ testCase "for mass of 12" $ calculateFuelMass 12 @?= 2
+                    , testCase "for mass of 14" $ calculateFuelMass 14 @?= 2
+                    , testCase "for mass of 1969" $ calculateFuelMass 1969 @?= 654
+                    , testCase "for mass of 100756" $ calculateFuelMass 100756 @?= 33583
                     ]
 
-testTotalFuel :: TestTree
-testTotalFuel = testCase "total fuel requirement" $
-  totalFuel "test/Y2019/D01Input.txt" >>= \tf -> tf @?= 3239503
+testTotalFuelMass :: TestTree
+testTotalFuelMass = testCase "total fuel requirement" $
+  totalFuelMass "test/Y2019/D01Input.txt" >>= \tf -> tf @?= 3239503

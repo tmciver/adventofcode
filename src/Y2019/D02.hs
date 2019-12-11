@@ -89,5 +89,38 @@ replace position 1 with the value 12 and replace position 2 with the value
 
 -}
 
-runIntInstructions :: [Int] -> [Int]
-runIntInstructions = id
+type Operation = Int -> Int -> Int
+
+setElement :: [a] -> Int -> a -> Maybe [a]
+setElement xs i x | length xs > i = Just $ take i xs ++ [x] ++ drop (i+1) xs
+setElement _ _ _ = Nothing
+
+doOperation :: Operation -> Int -> [Int] -> Maybe [Int]
+doOperation op i xs | length xs - i + 1 > 3 = let x = xs !! i
+                                                  y = xs !! (i+1)
+                                                  j = xs !! (i+2)
+                                                  x' = xs !! x
+                                                  y' = xs !! y
+                                                  z = op x' y'
+                                              in
+                                                setElement xs j z
+doOperation _ _ _ = Nothing
+
+add :: Int -> [Int] -> Maybe [Int]
+add = doOperation (+)
+
+multiply :: Int -> [Int] -> Maybe [Int]
+multiply = doOperation (*)
+
+runIntInstructions' :: Int   -- ^The index of the current instruction
+                    -> [Int] -- ^The current state of memory
+                    -> Maybe [Int]
+runIntInstructions' n is = case is !! n of
+  1 -> add (n+1) is >>= runIntInstructions' (n+4)
+  2 -> multiply (n+1) is >>= runIntInstructions' (n+4)
+  99 -> Just is
+  _ -> Nothing
+
+runIntInstructions :: [Int] -> Maybe [Int]
+runIntInstructions [] = Just []
+runIntInstructions xs = runIntInstructions' 0 xs
